@@ -10,6 +10,8 @@ $ pandoc -t plain git.md
 
 # Key things
 
+* every git local repository is main repository
+	(git repositiores system is distributed)
 * git repository is always created locally
 * it can be accessed remotely if created on server
 
@@ -201,6 +203,7 @@ Synthax of this file is:
 * You can end patterns with a forward slash (`/`) to specify a directory.
 * You can negate a pattern by starting it with an exclamation point (`!`).
 
+
 Patterns are applied relatively to `.gitignore` file path.
 
 Examples can be found at https://github.com/github/gitignore
@@ -255,6 +258,150 @@ To save work described by stageing area `git commit`
 command is used.:
 
 
+```console
+$ git commit
+```
+
+Now default system or set (using `git config --global core.editor`) 
+editor will be called to create commit message. It will open
+some file which should be edited and saved. After editor process
+termination message from saved file will be used as commit message.
+
+
+After successful commit repo status should be as fallows:
+
+```console
+$ git status
+On branch master
+nothing to commit, working tree clean
+$
+```
+
+
+# History
+
+History can be shown using:
+
+```console
+$ git log
+commit 55c896e52f51a68e68be95bfaf5dec5e607f84dc (HEAD -> master)
+Author: Michal Kolodziej <kolodziej.michal@geemail.com>
+Date:   Tue Feb 16 23:37:11 2021 +0100
+
+    Comments on viewing snapshots history.
+
+commit 335faa0617e94467393971302be4b9f93198293f
+Author: Michal Kolodziej <kolodziej.michal@gmail.com>
+Date:   Tue Feb 16 22:23:12 2021 +0100
+
+    In git.md added fundamental info about git version control system
+    philosopy and primary commands:
+    * add for marking changes (at stageing area)
+    * rm mv for marking remove/move changes
+    * status for repository changes in staged and unstaged areas
+    * diff for viewing inside files changes
+    
+    In .gitignore swap files are marked to be ignored.
+$
+```
+
+## Observing changes inside files (diff)
+
+* `--patch` (`-p`) option causes to display diff output
+* `-3` option causes to show 3 last snapshots
+
+```console
+$ git log --patch -3
+```
+
+## Observing status changes
+
+```console
+$ git log --stat
+```
+
+## Controlling what to show
+
+Entries description can be formatted using
+
+```console
+$ git log --pretty=format:"format string"
+$ # info about format can be found at
+$ # PRETTY FORMATS section of man
+$ # (search section using /PRETTY FORMATS)
+$ # (last search can be repeated using / and Enter)
+$ man git-log
+```
+
+## Branch and merge viewing (graph)
+
+```console
+$ git log --graph
+
+## Snapshots filtering
+
+Commits can be filtered using:
+* `--author` - filters commits to those of particular author
+* `--grep` - output containing something grepped
+* `-S` - ("pickaxe option") filters to commits changing number
+  of occuriences of specified string, for example:
+
+	```console
+	$ git log -S function_name
+	```
+
+## History for subdirectories
+
+```console
+$ git log -- path/to/search/within
+```
+
+## Other examples
+
+```console
+$ git log --pretty=oneline
+$ git log --pretty=format:"%h %s" --graph --since=2.weeks
+
+
+# Correctiong commits
+
+
+## Correcting commit message + minor changes (amend (rebase))
+
+To change commit message or content one may use
+`git commit --amend` command.
+
+```console
+$ git status
+$ # forgot something
+$ git add git.md 
+$ # same commit as before but with added forgotten content
+$ git commit --amend 
+```
+
+## Unstage file (reset)
+
+Following command removes file from stageing area
+but it will not lost any changes:
+
+```console
+$ git add *
+$ git reset HEAD not_intended_to_stage_file
+```
+
+## Delate changes (checkout)
+
+To delate all changes made to file (from point of view of stageing):
+
+```console
+$ git checkout -- changes_is_staged_file_snapshot
+```
+
+
+
+
+
+# Remote repositiories
 
 
 
