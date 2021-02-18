@@ -447,6 +447,11 @@ When you make a commit, Git stores a commit object that contains
 Branch:
 
 * A branch is just movable pointer to commit object.
+* Branch in Git is actually a simple file that contains the 40 
+	character SHA-1 checksum of the commit it points to, branches 
+	are cheap to create and destroy. Creating a new branch is as 
+	quick and simple as writing 41 bytes to a file (40 characters 
+	and a newline).
 
 Default branch:
 
@@ -527,14 +532,27 @@ will cause file history to be divergent.:
 
 ```console
 $ git commit --all --message "Changes in master causing history diversion"
+[master e21ddc6] Changes in master causing history diversion
+ 1 file changed, 162 insertions(+), 1 deletion(-)
 $ 
+```
 
 
 To see divergence in history:
 
 ```console
 $ git log --oneline --decorate --graph --all
+* e21ddc6 (HEAD -> master) Changes in master causing history diversion
+| * feaf387 (testing) First commit in testing branch.
+|/  
+* 0d44ae3 Start notes on branching.
+* 04d22c8 Comments on viewing snapshots history. And modification of last snap (amend).
+...
+$
 ```
+
+
+# Merging branches
 
 
 
