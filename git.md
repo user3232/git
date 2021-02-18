@@ -398,14 +398,18 @@ $ git checkout -- changes_is_staged_file_snapshot
 ```
 
 
-
-
-
 # Remote repositiories
 
 
+Remote repositiories can be configured 
+by adding and naming, or implicitly by cloning:
 
+```console
+$ git remote add origin ssh://github.com/user3232/charging.git
+$ git clone ssh://github.com/user3232/charging.git
+```
 
+Then they can be refered by name (e.g. "origin" for above example).
 
-
+ 
 
