@@ -411,5 +411,166 @@ $ git clone ssh://github.com/user3232/charging.git
 
 Then they can be refered by name (e.g. "origin" for above example).
 
- 
+
+# Branching
+
+Git encourages workflows that branch and merge often, 
+even multiple times in a day.
+
+When you make a commit, Git stores a commit object that contains
+* a pointer to the snapshot of the content you staged. 
+* This object also contains the author’s name and 
+* email address, 
+* the message that you typed, 
+* and pointers to the commit or commits that directly came before this commit 
+  (its parent or parents): 
+	* zero parents for the initial commit, 
+  * one parent for a normal commit, and 
+  * multiple parents for a commit that results from a merge 
+		of two or more branches.
+
+## Object stored by git
+
+* commit object - containing:
+	* author,
+	* committer and
+	* tree object pointer
+	* parent commit object pointer
+* tree object - containing:
+	* list of blob object pointer
+* blob object - containing:
+	* representation of file content
+
+
+## Branch and names
+
+Branch:
+
+* A branch is just movable pointer to commit object.
+
+Default branch:
+
+* A default branch name in git is `master`
+* A default branch name at github is (currently 2021) `main`
+* `master` points to last commit
+* Default branch does not differ from any other branch
+
+Branch I'm currently on:
+
+* in named HEAD
+* HEAD is pointer to the local branch you’re currently on
+* To display: `git log --oneline --decorate`
+* To display history of particular branch e.g.: `git log testing`
+* To display history of all branches: `git log --all`
+
+
+
+## New branch
+
+New branch creates a new pointer to the same commit you’re currently on.
+
+```console
+$ git commit -am "Start notes on branching."
+[master 0d44ae3] Start notes on branching.
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+$ git status
+On branch master
+nothing to commit, working tree clean
+$ git branch testing
+```
+
+## Switching Branches
+
+To switch to an existing branch, you run the git checkout command. 
+Let’s switch to the new testing branch:
+
+```console
+$ git checkout testing
+M	git.md
+Switched to branch 'testing'
+```
+
+Now lets commit in new branch:
+
+```console
+$ git commit --all --message "First commit in testing branch."
+[testing 975c535] First commit in testing branch.
+ 1 file changed, 86 insertions(+), 1 deletion(-)
+$
+```
+
+
+Lets switch bask to master branch:
+* this will make HEAD to point to master
+* **and also revert all files to master version**.
+
+
+```
+$ git checkout master
+error: Your local changes to the following files would be overwritten by checkout:
+	git.md
+Please commit your changes or stash them before you switch branches.
+Aborting
+$ git commit --all --amend
+[testing feaf387] First commit in testing branch.
+ Date: Thu Feb 18 16:50:08 2021 +0100
+ 1 file changed, 130 insertions(+), 1 deletion(-)
+$ git checkout master
+Switched to branch 'master'
+$ 
+```
+
+## Divergent branches
+
+Any changes to master branch after changes in testing branch
+will cause file history to be divergent.:
+
+```console
+$ git commit --all --message "Changes in master causing history diversion"
+$ 
+
+
+To see divergence in history:
+
+```console
+$ git log --oneline --decorate --graph --all
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
