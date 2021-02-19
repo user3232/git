@@ -554,35 +554,399 @@ $
 
 # Merging branches
 
+So we are at master branch, and wish to merge
+testing branch. We just do it:
+
+```console
+$ git merge testing
+Auto-merging git.md
+CONFLICT (zawartość): Merge conflict in git.md
+Automatic merge failed; fix conflicts and then commit the result.
+$ # can not automatically merge
+$ # lets see what is going on:
+$ git status
+On branch master
+You have unmerged paths.
+  (fix conflicts and run "git commit")
+  (use "git merge --abort" to abort the merge)
+
+Unmerged paths:
+  (use "git add <file>..." to mark resolution)
+
+	both modified:   git.md
+
+no changes added to commit (use "git add" and/or "git commit -a")
+```
+
+Now `merge ...` causes conflicted files to be added
+to MERGE_HEAD as one file with tagged differences,
+for example conflicted file will now contain:
+
+```
+
+common content...
+
+<<<<<<< HEAD
+content in head...
+=======
+content in testing...
+>>>>>>> testing
+
+
+common content...
+
+
+
+<<<<<<< HEAD
+another content in head...
+=======
+another content in testing...
+>>>>>>> testing
+
+
+common content...
+
+```
+
+Above file can be marked as resolved by:
+
+* removing all tags (`<<<<<<<`, `=======`, `>>>>>>>`)
+	leaving file with desired content,
+* saving this file,
+* and staging it by: `git add confilict_free_file`.
+
+
+State of merging can be checked by `git status` command.
+
+After above steps, commit will cause merge.
+Usually merged branch will not be useful in future,
+so it can be delated (it is just pointer to commit,
+so removing this pointer will cause no important
+information loss).
+
+Continuing example:
+
+```console
+$ # remove tags leaving desired content
+$ vim git.md
+$ git status
+On branch master
+All conflicts fixed but you are still merging.
+  (use "git commit" to conclude merge)
+
+$ # resolved git.md was automaticaly added to staging area
+$ # but it can be done more times:
+$ git add git.md
+$ git commit 
+[master 5da1aac] Merge branch 'testing'
+$ # testing branch wont be needed so delete it:
+$ git branch -d testing
+Deleted branch testing (was feaf387).
+$
+```
+
+
+## Using `git mergetool`
+
+Every conflict resolving process will end with
+file containing desired content. So normal file
+edit is ok, but there are also diff/merge tools
+which "helps" with this.
+
+[`git mergetool`](https://www.git-scm.com/docs/git-mergetool)
+command will call (configured) 
+diff/merge program and after this program termination
+it will use this program output file and
+add this file to staging area.
+
+On Ubuntu one of such popular diff/merge GUI program
+is Meld.
+
+```console
+$ sudo apt-get install meld
+....
+$ # lets call meld:
+$ # git mergetool -t meld
+$ # or select tool interactively:
+$ git mergetool
+
+This message is displayed because 'merge.tool' is not configured.
+See 'git mergetool --tool-help' or 'git help config' for more details.
+'git mergetool' will now attempt to use one of the following tools:
+meld opendiff kdiff3 tkdiff xxdiff tortoisemerge gvimdiff diffuse diffmerge ecmerge p4merge araxis bc codecompare emerge vimdiff
+Merging:
+git.md
+
+Normal merge conflict for 'git.md':
+  {local}: modified file
+  {remote}: modified file
+Hit return to start merge resolution tool (meld): 
+$ # default configuration specifies (un)fortuately
+$ # to leave intermediate files :
+$ git status 
+On branch master
+All conflicts fixed but you are still merging.
+  (use "git commit" to conclude merge)
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+	git.md.orig
+	git_BACKUP_20811.md
+	git_BASE_20811.md
+	git_LOCAL_20811.md
+	git_REMOTE_20811.md
+
+$ # this can be repaired by removing those files
+$ # after successful merge:
+$ git clean -i
+Would remove the following items:
+  git.md.orig          git_BASE_20811.md    git_REMOTE_20811.md
+  git_BACKUP_20811.md  git_LOCAL_20811.md
+*** Commands ***
+    1: clean                2: filter by pattern    3: select by numbers
+    4: ask each             5: quit                 6: help
+What now> c
+Removing git.md.orig
+Removing git_BACKUP_20811.md
+Removing git_BASE_20811.md
+Removing git_LOCAL_20811.md
+Removing git_REMOTE_20811.md
+$ # another possibility is to configure above to be automatic:
+$ git config --global mergetool.keepBackup false
+$ # also choice of tool can be configured, e.g. for meld:
+$ git config --global merge.tool meld
+$
+```
+
+
+# Branch management
+
+
+Examples:
+
+```console
+$ # what branches exists?
+$ git branch 
+* master
+$ # new branch
+$ git branch other
+$ git branch 
+* master
+  other
+$ # list all branches last commit
+$ git branch -v
+* master 5da1aac Merge branch 'testing'
+  other  5da1aac Merge branch 'testing'
+$ git branch --merged
+* master
+  other
+$ # branches merged with current branch
+$ git branch --merged
+* master
+  other
+$ # rename branch (only locally)
+$ git branch --move other experiment
+$ # show not only local info (but also remotes
+$ # which this repo lacks at this time)
+$ git branch --all
+  experiment
+* master
+$ 
+```
+
+
+# Synchronizing with remotes
+
+## To have local version having remote version
+
+Use command: `git fetch <remote>`
+
+Example
+
+```console
+$ git checkout master
+$ # this will make origin/master actual
+$ git fetch origin
+```
+
+
+## To have remote version having local version
+
+Use command: 
+
+* `git push <to_remote> <local_branch>`, or
+* `git push <to_remote> <local_branch_name> <corresponding_remote_branch_name`
+
+
+Following commands are equivallent:
+
+```console
+$ git push origin serverfix
+$ git push origin refs/heads/serverfix:refs/heads/serverfix
+$ git push origin serverfix:serverfix
+```
+
+## To track remote branch locally
+
+```console
+$ git checkout -b serverfix origin/serverfix
+Branch serverfix set up to track remote branch serverfix from origin.
+Switched to a new branch 'serverfix'
+$
+```
+
+Above:
+
+* This gives you a local branch that you can work on that 
+	starts where origin/serverfix is.
+* Checking out a local branch from a remote-tracking branch 
+	* automatically creates what is called a “tracking branch” 
+	* (and the branch it tracks is called an “upstream branch”).
+* If you’re on a tracking branch and type `git pull`, 
+	Git automatically knows which server to fetch from 
+	and which branch to merge in.
+* When you clone a repository, it generally automatically 
+	creates a `master` branch that tracks `origin/master`.
+
+Tracking remote branches is very common task, there exists
+shortcuts, following commands are equivalent:
+
+```console
+$ git checkout -b serverfix origin/serverfix
+$ git checkout --track origin/serverfix
+$ git checkout serverfix
+```
+
+## What is tracked? And tracking when having existing branches
+
+```
+$ git branch -u origin/serverfix
+Branch serverfix set up to track remote branch serverfix from origin.
+```
+
+```
+$ git branch --set-upstream-to origin/serverfix
+Branch serverfix set up to track remote branch serverfix from origin.
+```
+
+To see what tracking branches you have set up:
+
+```console
+$ git fetch --all; git branch -vv
+  iss53     7e424c3 [origin/iss53: ahead 2] Add forgotten brackets
+  master    1ae2a45 [origin/master] Deploy index fix
+* serverfix f8674d9 [teamone/server-fix-good: ahead 3, behind 1] Should do it
+  testing   5ea463a Try something new
+$
+```
+
+## Deleting Remote Branches
+
+```console
+$ git push origin --delete serverfix
+To https://github.com/schacon/simplegit
+ - [deleted]         serverfix
+```
+
+# Rebasing
+
+Rebasing chenges but simplifies history.
+It works as well as merge if:
+* no one references that will be rebased
+* which implays that rebase is ok when you work 
+  on something privately.
+
+
+**With the rebase command, you can take all the changes 
+that were committed on one branch and replay 
+them on a different branch.**
+
+Examples:
+
+```console
+$ git checkout experiment
+$ git rebase master
+First, rewinding head to replay your work on top of it...
+Applying: added staged command
+$ git checkout master
+$ git merge experiment
+```
+
+## Rebase When You Rebase
+
+When you rebase stuff, you’re abandoning existing commits 
+and creating new ones that are similar but different. 
+If you push commits somewhere and others pull them down 
+and base work on them, and then you rewrite those commits 
+with git rebase and push them up again, your collaborators 
+will have to re-merge their work and things will get messy 
+when you try to pull their work back into yours.
 
 
 
 
+It turns out that in addition to the commit SHA-1 checksum, 
+Git also calculates a checksum that is based just on the 
+patch introduced with the commit. This is called a “patch-id”.
+
+If you pull down work that was rewritten and rebase it on top 
+of the new commits from your partner, Git can often successfully 
+figure out what is uniquely yours and apply them back on top 
+of the new branch.
 
 
+Example:
+
+```console
+$ git fetch
+$ git rebase teamone/master
+```
+
+or (almost) equivalently:
+
+```console
+$ git pull --rebase
 
 
+# Tagging
+
+Creates (constant?) branch.
+
+```console
+$ # Annotated Tags:
+$ git tag -a v0.5 -m "Initial beta version 0.5"
+$ # list existing tags:
+$ git tag
+v0.5
+$ # delete last tag
+$ git tag -d v0.5
+$ # Lightweight Tags (does not add annotations)
+$ # tag object only have name and pointer to commit
+$ # -a (annotate) -m (message) can not be used
+$ git tag v0.5
+$ # push tag to remote (same as with branch):
+$ git push origin v0.5
+$ # push all tags to remote:
+$ git push --tags
+$ # viewing files of tag (same as branch):
+$ git checkout v0.5
+Commits here can be done but eventualy must end
+in other branch name...
+```
 
 
+# GitHub CLI s
 
+GitHub can be accessed by CLI tools:
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+* (official) [GitHub CLI](https://github.com/cli/cli) (`$ gh`) 
+  * [manual](https://cli.github.com/manual/),
+	* [Linux install instructions](https://github.com/cli/cli/blob/trunk/docs/install_linux.md)
+* (git CLI extension) [hub](https://github.com/github/hub) (`$ hub`)
+	* [examples](https://hub.github.com/#developer),
+	* [manual](https://hub.github.com/hub.1.html), probably `$ man hub` will
+    also work.
 
 
 
