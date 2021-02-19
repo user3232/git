@@ -1,5 +1,5 @@
 <!-- 
-vim: set tabstop=2:
+vim: set tabstop=2:expandtab:
 -->
 <!--
 to view this in console:
@@ -11,7 +11,7 @@ $ pandoc -t plain git.md
 # Key things
 
 * every git local repository is main repository
-	(git repositiores system is distributed)
+  (git repositiores system is distributed)
 * git repository is always created locally
 * it can be accessed remotely if created on server
 
@@ -102,8 +102,8 @@ $ git add -i
   1:       +68/-0      nothing git.md
 
 *** Commands ***
-  1: status	  2: update	  3: revert	  4: add untracked
-  5: patch	  6: diff	  7: quit	  8: help
+  1: status   2: update   3: revert   4: add untracked
+  5: patch    6: diff   7: quit   8: help
 What now> q
 Bye.
 $ # to see what is going on:
@@ -115,12 +115,12 @@ No commits yet
 Changes to be committed:
   (use "git rm --cached <file>..." to unstage)
 
-	nowy plik:     git.md
+  nowy plik:     git.md
 
 Untracked files:
   (use "git add <file>..." to include in what will be committed)
 
-	.git.md.swp
+  .git.md.swp
 
 $
 ```
@@ -129,8 +129,8 @@ $
 # Tracked and untracked files
 
 * Tracked files are those who:
-	* were in last snapshot or
-	* are in stageing area (marked with `git add somefile.x`).
+  * were in last snapshot or
+  * are in stageing area (marked with `git add somefile.x`).
 * Untracked files are all other files.
 * Modified files are files that were in last snapshot but
   have different content.
@@ -165,13 +165,13 @@ No commits yet
 Changes to be committed:
   (use "git rm --cached <file>..." to unstage)
 
-	nowy plik:     git.md
+  nowy plik:     git.md
 
 Changes not staged for commit:
   (use "git add <file>..." to update what will be committed)
   (use "git checkout -- <file>..." to discard changes in working directory)
 
-	zmodyfikowany: git.md
+  zmodyfikowany: git.md
 
 $ git add git.md
 $ git status
@@ -182,7 +182,7 @@ No commits yet
 Changes to be committed:
   (use "git rm --cached <file>..." to unstage)
 
-	nowy plik:     git.md
+  nowy plik:     git.md
 
 $ git status -s
 A git.md
@@ -198,7 +198,7 @@ Synthax of this file is:
 
 * Blank lines or lines starting with `#` are ignored.
 * Standard glob patterns work, and will be applied 
-	recursively throughout the entire working tree (`*`, `**`, `[ab]`, `?`).
+  recursively throughout the entire working tree (`*`, `**`, `[ab]`, `?`).
 * You can start patterns with a forward slash (`/`) to avoid recursivity.
 * You can end patterns with a forward slash (`/`) to specify a directory.
 * You can negate a pattern by starting it with an exclamation point (`!`).
@@ -346,9 +346,9 @@ Commits can be filtered using:
 * `-S` - ("pickaxe option") filters to commits changing number
   of occuriences of specified string, for example:
 
-	```console
-	$ git log -S function_name
-	```
+  ```console
+  $ git log -S function_name
+  ```
 
 ## History for subdirectories
 
@@ -424,22 +424,22 @@ When you make a commit, Git stores a commit object that contains
 * the message that you typed, 
 * and pointers to the commit or commits that directly came before this commit 
   (its parent or parents): 
-	* zero parents for the initial commit, 
+  * zero parents for the initial commit, 
   * one parent for a normal commit, and 
   * multiple parents for a commit that results from a merge 
-		of two or more branches.
+    of two or more branches.
 
 ## Object stored by git
 
 * commit object - containing:
-	* author,
-	* committer and
-	* tree object pointer
-	* parent commit object pointer
+  * author,
+  * committer and
+  * tree object pointer
+  * parent commit object pointer
 * tree object - containing:
-	* list of blob object pointer
+  * list of blob object pointer
 * blob object - containing:
-	* representation of file content
+  * representation of file content
 
 
 ## Branch and names
@@ -448,10 +448,10 @@ Branch:
 
 * A branch is just movable pointer to commit object.
 * Branch in Git is actually a simple file that contains the 40 
-	character SHA-1 checksum of the commit it points to, branches 
-	are cheap to create and destroy. Creating a new branch is as 
-	quick and simple as writing 41 bytes to a file (40 characters 
-	and a newline).
+  character SHA-1 checksum of the commit it points to, branches 
+  are cheap to create and destroy. Creating a new branch is as 
+  quick and simple as writing 41 bytes to a file (40 characters 
+  and a newline).
 
 Default branch:
 
@@ -491,7 +491,7 @@ Let’s switch to the new testing branch:
 
 ```console
 $ git checkout testing
-M	git.md
+M git.md
 Switched to branch 'testing'
 ```
 
@@ -513,7 +513,7 @@ Lets switch bask to master branch:
 ```
 $ git checkout master
 error: Your local changes to the following files would be overwritten by checkout:
-	git.md
+  git.md
 Please commit your changes or stash them before you switch branches.
 Aborting
 $ git commit --all --amend
@@ -573,7 +573,7 @@ You have unmerged paths.
 Unmerged paths:
   (use "git add <file>..." to mark resolution)
 
-	both modified:   git.md
+  both modified:   git.md
 
 no changes added to commit (use "git add" and/or "git commit -a")
 ```
@@ -611,7 +611,7 @@ common content...
 Above file can be marked as resolved by:
 
 * removing all tags (`<<<<<<<`, `=======`, `>>>>>>>`)
-	leaving file with desired content,
+  leaving file with desired content,
 * saving this file,
 * and staging it by: `git add confilict_free_file`.
 
@@ -691,11 +691,11 @@ All conflicts fixed but you are still merging.
 Untracked files:
   (use "git add <file>..." to include in what will be committed)
 
-	git.md.orig
-	git_BACKUP_20811.md
-	git_BASE_20811.md
-	git_LOCAL_20811.md
-	git_REMOTE_20811.md
+  git.md.orig
+  git_BACKUP_20811.md
+  git_BASE_20811.md
+  git_LOCAL_20811.md
+  git_REMOTE_20811.md
 
 $ # this can be repaired by removing those files
 $ # after successful merge:
@@ -799,15 +799,15 @@ $
 Above:
 
 * This gives you a local branch that you can work on that 
-	starts where origin/serverfix is.
+  starts where origin/serverfix is.
 * Checking out a local branch from a remote-tracking branch 
-	* automatically creates what is called a “tracking branch” 
-	* (and the branch it tracks is called an “upstream branch”).
+  * automatically creates what is called a “tracking branch” 
+  * (and the branch it tracks is called an “upstream branch”).
 * If you’re on a tracking branch and type `git pull`, 
-	Git automatically knows which server to fetch from 
-	and which branch to merge in.
+  Git automatically knows which server to fetch from 
+  and which branch to merge in.
 * When you clone a repository, it generally automatically 
-	creates a `master` branch that tracks `origin/master`.
+  creates a `master` branch that tracks `origin/master`.
 
 Tracking remote branches is very common task, there exists
 shortcuts, following commands are equivalent:
@@ -943,14 +943,13 @@ GitHub can be accessed by CLI tools:
 * (official) [GitHub CLI](https://github.com/cli/cli) (`$ gh`) 
 
   * [manual](https://cli.github.com/manual/) ,
-
-	* [Linux install instructions](https://github.com/cli/cli/blob/trunk/docs/install_linux.md)
+  * [Linux install instructions](https://github.com/cli/cli/blob/trunk/docs/install_linux.md)
 
 * (git CLI extension) [hub](https://github.com/github/hub) (`$ hub`)
 
-	* [examples](https://hub.github.com/#developer),
+  * [examples](https://hub.github.com/#developer),
 
-	* [manual](https://hub.github.com/hub.1.html), probably `$ man hub` will
+  * [manual](https://hub.github.com/hub.1.html), probably `$ man hub` will
     also work.
 
 
