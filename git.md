@@ -21,8 +21,8 @@ To list/edit user configuration:
 
 ```console
 $ git config --list --show-origin
-file:/home/mk/.gitconfig        user.email=kolodziej.michal@gmail.com
-file:/home/mk/.gitconfig        user.name=Michal Kolodziej
+file:/home/mk/.gitconfig        user.email=26368212+user3232@users.noreply.github.com
+file:/home/mk/.gitconfig        user.name=MK
 file:/home/mk/.gitconfig        core.editor=vim
 $ git config --global core.editor vim
 $ git config --global core.editor
@@ -941,10 +941,15 @@ in other branch name...
 GitHub can be accessed by CLI tools:
 
 * (official) [GitHub CLI](https://github.com/cli/cli) (`$ gh`) 
+
   * [manual](https://cli.github.com/manual/),
+
 	* [Linux install instructions](https://github.com/cli/cli/blob/trunk/docs/install_linux.md)
+
 * (git CLI extension) [hub](https://github.com/github/hub) (`$ hub`)
+
 	* [examples](https://hub.github.com/#developer),
+
 	* [manual](https://hub.github.com/hub.1.html), probably `$ man hub` will
     also work.
 
